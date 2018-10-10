@@ -1,0 +1,45 @@
+<?php
+$con=  mysqli_connect("localhost", "root", "", "newschool");
+$select="Select * from route_point Order By order_num";
+$result=  mysqli_query($con, $select);
+$count=  mysqli_num_rows($result);
+?>
+<link href="bootstrapcss.css" rel="stylesheet">
+<table class="table table-bordered table-striped" id="tablelist">
+    <thead>
+        <tr>
+            <th>id</th><th>point_id</th><th>route_id</th><th>order_num</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        if($count<1){}else
+        {
+            foreach ($result as $row) {
+                ?>
+                <tr id="<?php echo $row["id"]; ?>">
+                    <td><?php echo $row["id"]; ?></td>
+                    <td><?php echo $row["point_id"]; ?></td>
+                    <td><?php echo $row["route_id"]; ?></td>
+                    <td><?php echo $row["order_num"]; ?></td>
+                    <input type="hidden" value="<?php echo $row["id"]; ?>" id="item" name="item">
+                </tr>
+                <?php 
+            }
+        }
+        ?>
+    </tbody>
+</table>
+<script src="jquery.min.js"></script>
+<script src="jquery-ui.min_1.js"></script>
+<script>
+  var $sortable = $( "#tablelist > tbody" );
+  $sortable.sortable({
+      stop: function ( event, ui ) {
+          var parameters = $sortable.sortable( "toArray" );
+          $.post("studentPosition.php",{value:parameters},function(result){
+              alert(result);
+          });
+      }
+  });
+</script>
